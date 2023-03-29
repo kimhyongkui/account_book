@@ -1,11 +1,24 @@
-from sqlalchemy import VARCHAR, Column, Integer
+from sqlalchemy import VARCHAR, Column, Boolean, TIMESTAMP, Integer
 from db.connection import Base
 
-class route_data(Base):
-    __tablename__ = "route_data"
 
-    routeId = Column(Integer, primary_key=True, nullable=False)
-    routeNm = Column(VARCHAR(45), nullable=False)
-    stnOrd = Column(Integer, primary_key=True, nullable=False)
-    stnNm = Column(VARCHAR(45), nullable=False)
-    stnId = Column(Integer, nullable=False)
+class users(Base):
+    __tablename__ = "users"
+
+    user_id = Column(VARCHAR(45), primary_key=True, nullable=False)
+    email = Column(VARCHAR(45), nullable=False,unique=True)
+    pwd = Column(VARCHAR(45), nullable=False)
+    status = Column(Boolean, nullable=False)
+    create_time = Column(TIMESTAMP, nullable=False)
+
+
+class account_book(Base):
+    __tablename__ = "account_book"
+
+    no = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    user_id = Column(VARCHAR(45), nullable=False)
+    amount = Column(Integer, nullable=False)
+    date = Column(Integer, nullable=False)
+    memo = Column(VARCHAR(45), nullable=False)
+    status = Column(Boolean, nullable=False)
+    create_time = Column(TIMESTAMP, nullable=False)
