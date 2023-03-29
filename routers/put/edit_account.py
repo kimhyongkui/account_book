@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from db.put.edit_account import edit_account
+from db.update.edit_account import edit_account
 
 router = APIRouter(prefix="/account")
 

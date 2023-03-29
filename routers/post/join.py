@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from db.post.join import create_account
+from db.create.join import create_account
 
 router = APIRouter(prefix="/join")
 
