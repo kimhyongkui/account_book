@@ -18,7 +18,7 @@ class account_book(Base):
     no = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     user_id = Column(VARCHAR(45), nullable=False)
     amount = Column(Integer, nullable=False)
-    date = Column(Integer, nullable=False)
+    date = Column(VARCHAR(45), nullable=False)
     memo = Column(VARCHAR(45), nullable=False)
     status = Column(Boolean, nullable=False)
     create_time = Column(TIMESTAMP, nullable=False)
