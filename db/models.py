@@ -5,10 +5,11 @@ from db.connection import Base
 class users(Base):
     __tablename__ = "users"
 
-    user_id = Column(VARCHAR(45), primary_key=True, nullable=False)
-    email = Column(VARCHAR(45), nullable=False,unique=True)
-    pwd = Column(VARCHAR(45), nullable=False)
+    user_id = Column(VARCHAR(255), primary_key=True, nullable=False)
+    email = Column(VARCHAR(255), nullable=False, unique=True)
+    pwd = Column(VARCHAR(255), nullable=False)
     status = Column(Boolean, nullable=False)
+    permission = Column(Boolean, nullable=False)
     create_time = Column(TIMESTAMP, nullable=False)
 
 

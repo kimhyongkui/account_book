@@ -1,25 +1,35 @@
 from sqlalchemy.orm import sessionmaker
 from db.connection import engine
 from db.models import users
+from datetime import datetime
 from fastapi import status
 from fastapi.responses import JSONResponse
+from passlib.context import CryptContext
 
 Session = sessionmaker(bind=engine)
 session = Session()
 
+bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated="auto")
 
-def delete_user(user_id):
-    result = session.query(users).filter_by(user_id=user_id).first()
-    if not result:
+
+def delete_user(user_id, email, pwd):
+    try:
+        search = session.query(users).filter_by(user_id=user_id, email=email, status=True).first()
+        if search:
+            if bcrypt_context.verify(pwd, search.pwd):
+                session.query(users). \
+                    filter_by(user_id=user_id, email=email, status=True). \
+                    update({"status": False, "create_time": datetime.now()})
+                session.commit()
+                result = JSONResponse(status_code=status.HTTP_200_OK, content={"message": "아이디 삭제 완료"})
+            else:
+                result = JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED, content={"message": "잘못된 비밀번호"})
+        else:
+            result = JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "아이디가 없음"})
+        return result
+
+    except Exception as err:
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=str(err))
+
+    finally:
         session.close()
-        return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "계정을 찾을 수 없습니다"})
-    else:
-        result = session.query(users).filter_by(user_id=user_id).first()
-        data_dict = {
-            'user_id': result.user_id,
-            'email': result.email,
-            'pwd': result.pwd
-        }
-        session.commit()
-        session.close()
-        return data_dict
