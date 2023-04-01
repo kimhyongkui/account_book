@@ -13,7 +13,7 @@ def edit_account_book(no, user_id, amount, date, memo):
     try:
         result = session.query(account_book).filter_by(no=no, user_id=user_id, status=True).first()
         if not result:
-            result = JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "해당 계정의 데이터를 찾을 수 없습니다"})
+            result = JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "데이터를 찾을 수 없습니다"})
         else:
             session.query(account_book).filter_by(no=no, user_id=user_id, status=True). \
                 update({"amount": amount, "date": date, "memo": memo, "create_time": datetime.now()})

@@ -32,6 +32,7 @@ def delete_account_book(user_id, no=None):
                 result = JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "데이터가 없음"})
 
         return result
+
     except Exception as err:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=str(err))
 

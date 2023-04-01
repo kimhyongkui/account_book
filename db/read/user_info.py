@@ -9,17 +9,24 @@ session = Session()
 
 
 def get_user(user_id):
-    result = session.query(users).filter_by(user_id=user_id).first()
-    if not result:
-        session.close()
-        return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "계정을 찾을 수 없습니다"})
-    else:
+    try:
         result = session.query(users).filter_by(user_id=user_id).first()
-        data_dict = {
-            'user_id': result.user_id,
-            'email': result.email,
-            'pwd': result.pwd
-        }
-        session.commit()
+        if not result:
+            return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "계정을 찾을 수 없습니다"})
+
+        else:
+            result = session.query(users).filter_by(user_id=user_id).first()
+            data_dict = {
+                'user_id': result.user_id,
+                'email': result.email,
+                'pwd': result.pwd
+            }
+            session.commit()
+            result = data_dict
+
+        return result
+
+    except Exception as err:
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=str(err))
+    finally:
         session.close()
-        return data_dict

@@ -25,7 +25,7 @@ def delete_user(user_id, email, pwd):
             else:
                 result = JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED, content={"message": "잘못된 비밀번호"})
         else:
-            result = JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "아이디가 없음"})
+            result = JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "아이디 또는 메일이 잘못됨"})
         return result
 
     except Exception as err:
@@ -33,3 +33,4 @@ def delete_user(user_id, email, pwd):
 
     finally:
         session.close()
+

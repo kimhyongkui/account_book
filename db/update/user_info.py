@@ -11,11 +11,12 @@ session = Session()
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated="auto")
 
+
 def edit_user(user_id, email, pwd):
     try:
         search = session.query(users).filter_by(user_id=user_id, status=True).first()
         if not search:
-            result = JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "계정을 찾을 수 없습니다"})
+            result = JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "데이터를 찾을 수 없습니다"})
         else:
             hashed_pwd = bcrypt_context.hash(pwd)
             session.query(users).filter_by(user_id=user_id, status=True). \

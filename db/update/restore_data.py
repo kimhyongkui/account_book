@@ -19,13 +19,13 @@ def restore_user(user_id, email, pwd):
             if bcrypt_context.verify(pwd, search.pwd):
                 session.query(users). \
                     filter_by(user_id=user_id, email=email, status=False). \
-                    update({"status": True, "create_time": datetime.now()})
+                    update({"status": True, "permission": False, "create_time": datetime.now()})
                 session.commit()
                 result = JSONResponse(status_code=status.HTTP_200_OK, content={"message": "아이디 복구 완료"})
             else:
                 result = JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED, content={"message": "잘못된 비밀번호"})
         else:
-            result = JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "없는 아이디나 메일입니다"})
+            result = JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "데이터가 없습니다"})
 
         return result
 
@@ -45,18 +45,18 @@ def restore_account_book(user_id, no=None):
                 session.query(account_book).filter_by(no=no, user_id=user_id, status=False). \
                     update({"status": True, "create_time": datetime.now()})
                 session.commit()
-                result = JSONResponse(status_code=status.HTTP_200_OK, content={"message": "데이터가 복구됨"})
+                result = JSONResponse(status_code=status.HTTP_200_OK, content={"message": "데이터 복구 완료"})
             else:
-                result = JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "데이터가 없음"})
+                result = JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "데이터가 없습니다"})
         else:
             data = search.filter_by(user_id=user_id, status=False).all()
             if data:
                 session.query(account_book).filter_by(user_id=user_id, status=False). \
                     update({"status": True, "create_time": datetime.now()})
                 session.commit()
-                result = JSONResponse(status_code=status.HTTP_200_OK, content={"message": "모든 데이터가 복구됨"})
+                result = JSONResponse(status_code=status.HTTP_200_OK, content={"message": "모든 데이터 복구 완료"})
             else:
-                result = JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "데이터가 없음"})
+                result = JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "데이터가 없습니다"})
 
         return result
 
