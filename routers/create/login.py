@@ -1,26 +1,55 @@
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from db.create.login import login_user, logout_user
+from fastapi import APIRouter, Depends
+from db.models import users
+from db.connection import engine
+from sqlalchemy.orm import sessionmaker
+from fastapi import status
+from fastapi.responses import JSONResponse
+from passlib.context import CryptContext
+from datetime import datetime
+from app.auth import has_permission
+
+
+Session = sessionmaker(bind=engine)
+session = Session()
 
 router = APIRouter()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated="auto")
 
 
 @router.post('/login', tags=["login"])
-def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user_id = form_data.username
-    pwd = form_data.password
-    result = login_user(user_id, pwd)
-    if not result:
-        raise HTTPException(status_code=401, detail="Invalid username or password")
-    return {"access_token": result}
+def login(user_id: str, pwd: str):
+    try:
+        user = session.query(users).filter_by(user_id=user_id, status=True).first()
+        if not user:
+            result = JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"message": "아이디가 없습니다"})
+
+        elif not bcrypt_context.verify(pwd, user.pwd):
+            result = JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"message": "비밀번호가 틀립니다"})
+
+        else:
+            session.query(users).filter_by(user_id=user_id, status=True).\
+                update({"permission": True, "create_time": datetime.now()})
+            session.commit()
+            result = JSONResponse(status_code=status.HTTP_200_OK, content={"message": "로그인 성공"})
+
+        return result
+
+    except Exception as err:
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=str(err))
+
+    finally:
+        session.close()
 
 
 @router.post('/logout', tags=["logout"])
-def logout(token: str = Depends(oauth2_scheme)):
-    user_id = token["sub"]
-    result = logout_user(user_id)
-    if not result:
-        raise HTTPException(status_code=400, detail="Failed to logout")
-    return {"detail": "Successfully logged out"}
+def logout(user_id: str = Depends(has_permission)):
+    try:
+        session.query(users).filter_by(user_id=user_id, status=True). \
+            update({"permission": False, "create_time": datetime.now()})
+        session.commit()
+        result = JSONResponse(status_code=status.HTTP_200_OK, content={"message": "로그아웃 성공"})
+        return result
+
+    except Exception as err:
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=str(err))
