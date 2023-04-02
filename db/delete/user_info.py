@@ -17,7 +17,7 @@ def delete_user(user_id, email, pwd):
             if verify_password(pwd, search.pwd):
                 session.query(users). \
                     filter_by(user_id=user_id, email=email, status=True). \
-                    update({"status": False, "create_time": datetime.now()})
+                    update({"status": False, "permission": False, "create_time": datetime.now()})
                 session.commit()
                 result = JSONResponse(status_code=status.HTTP_200_OK, content={"message": "아이디 삭제 완료"})
             else:
