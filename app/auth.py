@@ -1,28 +1,30 @@
-from fastapi import Depends, status, HTTPException
-from db.models import users
+from fastapi import Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy.orm import sessionmaker
 from db.connection import engine
-from sqlalchemy.orm import sessionmaker, Session
 from passlib.context import CryptContext
+from jose import jwt
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/account-book/login")
+
+SECRET_KEY = "secret_key"
+ALGORITHM = "HS256"
 
 SessionLocal = sessionmaker(bind=engine)
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated="auto")
 
 
-def get_db():
-    db = SessionLocal()
+def get_current_user(token: str = Depends(oauth2_scheme)):
     try:
-        yield db
-    finally:
-        db.close()
-
-
-def has_permission(user_id: str, db: Session = Depends(get_db)):
-    user = db.query(users).filter_by(user_id=user_id).first()
-    if user and user.permission:
-        return user_id
-    else:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="권한이 없습니다")
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id = payload.get("sub")
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+        else:
+            return user_id
+    except jwt.JWTError:
+        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
 
 
 def password_hash(pwd):
@@ -31,4 +33,3 @@ def password_hash(pwd):
 
 def verify_password(pwd, hashed_password):
     return bcrypt_context.verify(pwd, hashed_password)
-
