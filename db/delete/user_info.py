@@ -1,9 +1,9 @@
+from fastapi import status
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import sessionmaker
 from db.connection import engine
 from db.models import users
 from datetime import datetime
-from fastapi import status
-from fastapi.responses import JSONResponse
 from app.auth import verify_password
 
 Session = sessionmaker(bind=engine)
@@ -24,6 +24,7 @@ def delete_user(user_id, email, pwd):
                 result = JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED, content={"message": "잘못된 비밀번호"})
         else:
             result = JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "아이디 또는 메일이 잘못됨"})
+
         return result
 
     except Exception as err:

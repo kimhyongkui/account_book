@@ -1,9 +1,9 @@
+from fastapi import status
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import sessionmaker
 from db.connection import engine
 from db.models import users
 from datetime import datetime
-from fastapi import status
-from fastapi.responses import JSONResponse
 from app.auth import password_hash
 
 Session = sessionmaker(bind=engine)

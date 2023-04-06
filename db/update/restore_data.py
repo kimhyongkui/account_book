@@ -1,9 +1,9 @@
+from fastapi import status
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import sessionmaker
 from db.connection import engine
 from db.models import users, account_book
 from datetime import datetime
-from fastapi import status
-from fastapi.responses import JSONResponse
 from app.auth import verify_password
 
 Session = sessionmaker(bind=engine)
@@ -23,7 +23,7 @@ def restore_user(user_id, email, pwd):
             else:
                 result = JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED, content={"message": "잘못된 비밀번호"})
         else:
-            result = JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "데이터가 없습니다"})
+            result = JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "아이디가 없거나 메일이 잘못됨"})
 
         return result
 

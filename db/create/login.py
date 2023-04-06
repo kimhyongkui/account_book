@@ -1,7 +1,7 @@
+from fastapi import HTTPException, status
 from sqlalchemy.orm import sessionmaker
 from db.connection import engine
 from db.models import users
-from fastapi import HTTPException, status
 from datetime import datetime, timedelta
 from jose import jwt
 from app.auth import verify_password
