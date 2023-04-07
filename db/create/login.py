@@ -5,9 +5,13 @@ from db.models import users
 from datetime import datetime, timedelta
 from jose import jwt
 from app.auth import verify_password
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 
-SECRET_KEY = "secret_key"
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -32,7 +36,7 @@ def login(user_id, pwd):
             raise HTTPException(status_code=400, detail="비밀번호가 틀림")
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
-            data={"sub": user.user_id, "permissions": user.permission},
+            data={"user_id": user.user_id},
             expires_delta=access_token_expires
         )
         result = {"access_token": access_token, "token_type": "bearer", "user_id": user.user_id}
