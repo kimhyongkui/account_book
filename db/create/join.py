@@ -16,7 +16,7 @@ def create_account(user_id, email, pwd):
         check_email = session.query(users).filter_by(email=email).first()
         if check_id or check_email:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                                  detail="이미 존재하는 아이디 또는 이메일입니다.")
+                                detail="이미 존재하는 아이디 또는 이메일입니다.")
 
         account = users(
             user_id=user_id,
@@ -27,8 +27,8 @@ def create_account(user_id, email, pwd):
         )
         session.add(account)
         session.commit()
-        result = JSONResponse(status_code=status.HTTP_200_OK, content={"message": "데이터가 저장됨"})
-        return result
+
+        return JSONResponse(status_code=status.HTTP_200_OK, content={"message": "가입 성공."})
 
     except HTTPException as err:
         raise err

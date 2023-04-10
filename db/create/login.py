@@ -10,7 +10,6 @@ import os
 
 load_dotenv()
 
-
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -31,16 +30,17 @@ def login(user_id, pwd):
     try:
         user = session.query(users).filter_by(user_id=user_id).first()
         if not user:
-            raise HTTPException(status_code=400, detail="아이디가 없거나 틀림")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="아이디 또는 메일을 확인하세요.")
+
         if not verify_password(pwd, user.pwd):
-            raise HTTPException(status_code=400, detail="비밀번호가 틀림")
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="비밀번호가 틀렸습니다.")
+
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
             data={"user_id": user.user_id},
             expires_delta=access_token_expires
         )
-        result = {"access_token": access_token, "token_type": "bearer", "user_id": user.user_id}
-        return result
+        return {"access_token": access_token, "token_type": "bearer", "user_id": user.user_id}
 
     except HTTPException as err:
         raise err

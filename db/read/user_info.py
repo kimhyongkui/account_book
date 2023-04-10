@@ -1,8 +1,7 @@
+from fastapi import status, HTTPException
 from sqlalchemy.orm import sessionmaker
 from db.connection import engine
 from db.models import users
-from fastapi import status
-from fastapi.responses import JSONResponse
 
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -10,24 +9,23 @@ session = Session()
 
 def get_user(user_id):
     try:
-        result = session.query(users).filter_by(user_id=user_id, status=True).first()
-        if not result:
-            result = JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": "계정을 찾을 수 없습니다"})
+        user = session.query(users).filter_by(user_id=user_id, status=True).first()
+        if not user:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="계정을 찾을 수 없습니다.")
 
-        else:
-            result = session.query(users).filter_by(user_id=user_id).first()
-            data_dict = {
-                'user_id': result.user_id,
-                'email': result.email,
-                'pwd': result.pwd
-            }
-            session.commit()
-            result = data_dict
+        data_dict = {
+            'user_id': user.user_id,
+            'email': user.email,
+            'pwd': user.pwd
+        }
 
-        return result
+        return data_dict
+
+    except HTTPException as err:
+        raise err
 
     except Exception as err:
-        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=str(err))
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(err))
+
     finally:
         session.close()
-
