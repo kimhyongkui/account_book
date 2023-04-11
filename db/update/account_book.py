@@ -11,6 +11,7 @@ session = Session()
 
 def edit_account_book(no, user_id, amount, date, memo):
     try:
+        account_book(amount=amount, date=date, memo=memo)
         search = session.query(account_book).filter_by(no=no, user_id=user_id, status=True).first()
         if not search:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="데이터를 찾을 수 없습니다.")

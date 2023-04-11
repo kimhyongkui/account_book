@@ -24,6 +24,9 @@ def write_account_book(user_id, amount, date, memo):
 
         return JSONResponse(status_code=status.HTTP_200_OK, content={"message": "가계부 작성 완료"})
 
+    except HTTPException as err:
+        raise err
+
     except ValueError as err:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(err))
 

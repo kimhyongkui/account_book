@@ -37,5 +37,11 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
 
         return user_id
 
+    except HTTPException as err:
+        raise err
+
     except jwt.JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="인증된 권한이 없습니다")
+
+    except Exception as err:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(err))

@@ -6,6 +6,6 @@ router = APIRouter()
 
 
 @router.delete('/account/{user_id}', tags=["delete"])
-def edit_user_info(email, pwd, user_id: str = Depends(get_current_user)):
+def edit_user_info(email: str, pwd: str, user_id: str = Depends(get_current_user)):
     result = delete_user(user_id, email, pwd)
     return result

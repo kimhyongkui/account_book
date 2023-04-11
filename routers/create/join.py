@@ -5,6 +5,6 @@ router = APIRouter(prefix="/join")
 
 
 @router.post('/join', tags=["create"])
-def join(user_id, email, pwd):
+def join(user_id: str, email: str, pwd: str):
     result = create_account(user_id, email, pwd)
     return result

@@ -6,7 +6,7 @@ router = APIRouter()
 
 
 @router.get('/account-book/{user_id}/no', tags=["get"])
-def get_all_account_book_info(no, user_id: str = Depends(get_current_user)):
+def get_all_account_book_info(no: int, user_id: str = Depends(get_current_user)):
     result = get_account_book(no, user_id)
     return result
 

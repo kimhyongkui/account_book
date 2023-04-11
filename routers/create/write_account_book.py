@@ -6,6 +6,6 @@ router = APIRouter()
 
 
 @router.post('/account-book', tags=["create"])
-def write_account_book_info(amount, date, memo, user_id: str = Depends(get_current_user)):
+def write_account_book_info(amount: int, date: str, memo: str, user_id: str = Depends(get_current_user)):
     result = write_account_book(user_id, amount, date, memo)
     return result

@@ -6,7 +6,7 @@ router = APIRouter(prefix="/account-book")
 
 
 @router.delete('/specific/{user_id}', tags=["delete"])
-def delete_account_book_info(no, user_id: str = Depends(get_current_user)):
+def delete_account_book_info(no: int, user_id: str = Depends(get_current_user)):
     result = delete_account_book(user_id, no)
     return result
 
