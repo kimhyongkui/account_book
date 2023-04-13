@@ -28,7 +28,7 @@ def verify_password(pwd, hashed_password):
     return bcrypt_context.verify(pwd, hashed_password)
 
 
-def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_user_auth(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id = payload.get("user_id")

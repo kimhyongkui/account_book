@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routers.create import join, write_account_book, login
+from routers.create import join, create_account_book, login
 from routers.read import get_user_info, get_account_book
 from routers.patch import edit_user_info, edit_account_book, restore_data
 from routers.delete import delete_user_info, delete_account_book
@@ -7,9 +7,10 @@ import uvicorn
 
 app = FastAPI(title="account_book")
 
+
 app.include_router(join.router, prefix="/account-book")
 app.include_router(login.router, prefix="/account-book")
-app.include_router(write_account_book.router, prefix="/account-book")
+app.include_router(create_account_book.router, prefix="/account-book")
 
 app.include_router(get_user_info.router, prefix="/account-book")
 app.include_router(get_account_book.router, prefix="/account-book")

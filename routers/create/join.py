@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from db.create.join import create_account
 
-router = APIRouter(prefix="/join")
+router = APIRouter()
 
 
 @router.post('/join', tags=["create"])
