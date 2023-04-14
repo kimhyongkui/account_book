@@ -9,7 +9,6 @@ import os
 
 load_dotenv()
 
-
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/account-book/login")
 
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -33,7 +32,7 @@ def get_user_auth(token: str = Depends(oauth2_scheme)):
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id = payload.get("user_id")
         if user_id is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="인증된 권한이 없습니다")
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="인증된 권한이 없습니다.")
 
         return user_id
 
@@ -41,7 +40,7 @@ def get_user_auth(token: str = Depends(oauth2_scheme)):
         raise err
 
     except jwt.JWTError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="인증된 권한이 없습니다")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="인증된 권한이 없습니다.")
 
     except Exception as err:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(err))
