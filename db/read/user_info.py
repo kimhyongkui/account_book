@@ -1,7 +1,7 @@
 from fastapi import status, HTTPException
 from sqlalchemy.orm import sessionmaker
 from db.connection import engine
-from db.models import users
+from db.models import Users
 
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -9,7 +9,7 @@ session = Session()
 
 def get_user(user_id):
     try:
-        user = session.query(users).filter_by(user_id=user_id, status=True).first()
+        user = session.query(Users).filter_by(user_id=user_id, status=True).first()
         if not user:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="계정을 찾을 수 없습니다.")
 

@@ -1,7 +1,7 @@
 from fastapi import status, HTTPException
 from sqlalchemy.orm import sessionmaker
 from db.connection import engine
-from db.models import account_book
+from db.models import Account_book
 
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -9,7 +9,7 @@ session = Session()
 
 def get_account_book(no, user_id):
     try:
-        search = session.query(account_book).filter_by(no=no, user_id=user_id, status=True).first()
+        search = session.query(Account_book).filter_by(no=no, user_id=user_id, status=True).first()
         if not search:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="데이터를 찾을 수 없습니다.")
 
@@ -35,7 +35,7 @@ def get_account_book(no, user_id):
 
 def get_all_account_book(user_id):
     try:
-        search = session.query(account_book).filter_by(user_id=user_id, status=True).all()
+        search = session.query(Account_book).filter_by(user_id=user_id, status=True).all()
         if not search:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="데이터를 찾을 수 없습니다.")
 

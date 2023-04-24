@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import sessionmaker
 from db.connection import engine
-from db.models import users
+from db.models import Users
 from datetime import datetime, timedelta
 from jose import jwt
 from app.auth import verify_password
@@ -28,7 +28,7 @@ def create_access_token(data: dict, expires_delta: timedelta):
 
 def login(user_id, pwd):
     try:
-        user = session.query(users).filter_by(user_id=user_id).first()
+        user = session.query(Users).filter_by(user_id=user_id).first()
         if not user:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="아이디 또는 메일을 확인하세요.")
 

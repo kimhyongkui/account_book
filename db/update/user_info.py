@@ -2,7 +2,7 @@ from fastapi import status, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import sessionmaker
 from db.connection import engine
-from db.models import users
+from db.models import Users
 from datetime import datetime
 from app.auth import password_hash
 
@@ -12,12 +12,12 @@ session = Session()
 
 def edit_user(user_id, email, pwd):
     try:
-        users(email=email, pwd=pwd)
-        search = session.query(users).filter_by(user_id=user_id, status=True).first()
+        Users(email=email, pwd=pwd)
+        search = session.query(Users).filter_by(user_id=user_id, status=True).first()
         if not search:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="데이터를 찾을 수 없습니다.")
 
-        session.query(users).filter_by(user_id=user_id, status=True). \
+        session.query(Users).filter_by(user_id=user_id, status=True). \
             update({"email": email, "pwd": password_hash(pwd), "create_time": datetime.now()})
         session.commit()
 
