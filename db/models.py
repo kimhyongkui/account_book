@@ -1,5 +1,5 @@
 from fastapi import status, HTTPException
-from sqlalchemy import VARCHAR, Column, Boolean, TIMESTAMP, Integer, Date, ForeignKey, DateTime
+from sqlalchemy import VARCHAR, Column, Boolean, TIMESTAMP, Integer, Date
 from sqlalchemy.orm import validates
 from db.connection import Base
 from datetime import datetime
@@ -77,11 +77,3 @@ class Account_book(Base):
                                 detail="메모가 너무 깁니다. 255자를 넘지 말아주세요.")
 
         return value
-
-class Service_tokens(Base):
-    __tablename__ = "service_tokens"
-
-    token_id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-    user_id = Column(VARCHAR(50), ForeignKey("users.user_id"), nullable=False)
-    service_token = Column(VARCHAR(50), nullable=False)
-    expiration = Column(DateTime)
