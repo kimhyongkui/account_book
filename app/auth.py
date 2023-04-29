@@ -5,6 +5,7 @@ from db.connection import engine
 from passlib.context import CryptContext
 from jose import jwt
 from dotenv import load_dotenv
+from db.create.logout import blacklist
 import os
 
 load_dotenv()
@@ -29,6 +30,9 @@ def verify_password(pwd, hashed_password):
 
 def get_user_auth(token: str = Depends(oauth2_scheme)):
     try:
+        if token in blacklist:
+            raise HTTPException(status_code=400, detail="취소된 토큰입니다")
+
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id = payload.get("user_id")
         if user_id is None:
