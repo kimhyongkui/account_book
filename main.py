@@ -23,10 +23,19 @@ app.include_router(restore_data.router, prefix="/account-book")
 app.include_router(delete_user_info.router, prefix="/account-book")
 app.include_router(delete_account_book.router, prefix="/account-book")
 
+# if __name__ == "__main__":
+#     uvicorn.run(
+#         "main:app",
+#         host="0.0.0.0",
+#         reload=True,
+#         port=8080
+#     )
+
+# development only
 if __name__ == "__main__":
     uvicorn.run(
         "main:app",
-        host="0.0.0.0",
+        host="localhost",
         reload=True,
-        port=8080
+        port=80
     )

@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends
-from app.auth import get_user_auth
-from db.create.logout import delete_token
+from app.auth import oauth2_scheme
+from db.create.logout import logout_jwt
 
 router = APIRouter()
 
 
 @router.post("/logout", tags=["logout"])
-def logout_jwt(user_id: str = Depends(get_user_auth)):
-    result = delete_token(user_id)
+def logout(token: str = Depends(oauth2_scheme)):
+    result = logout_jwt(token)
     return result
