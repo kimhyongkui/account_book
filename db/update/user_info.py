@@ -12,7 +12,6 @@ session = Session()
 
 def edit_user(user_id, email, pwd):
     try:
-        Users(email=email, pwd=pwd)
         search = session.query(Users).filter_by(user_id=user_id, status=True).first()
         if not search:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="데이터를 찾을 수 없습니다.")
