@@ -42,7 +42,6 @@ class Users(Base):
         return value
 
 
-
 class Account_book(Base):
     __tablename__ = "account_book"
 

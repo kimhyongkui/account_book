@@ -37,5 +37,5 @@ if __name__ == "__main__":
         "main:app",
         host="localhost",
         reload=True,
-        port=80
+        port=8000
     )
