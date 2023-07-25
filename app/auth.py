@@ -6,6 +6,7 @@ from passlib.context import CryptContext
 from jose import jwt
 from dotenv import load_dotenv
 from db.create.logout import blacklist
+from datetime import datetime
 import os
 
 load_dotenv()
@@ -34,6 +35,10 @@ def get_user_auth(token: str = Depends(oauth2_scheme)):
             raise HTTPException(status_code=400, detail="취소된 토큰입니다")
 
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        timestamp = datetime.utcfromtimestamp(payload["exp"])
+        if timestamp < datetime.utcnow():
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="만료된 토큰")
+
         user_id = payload.get("user_id")
         if user_id is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="인증된 권한이 없습니다.")
